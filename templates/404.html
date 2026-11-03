@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}GrandStay | 404{% endblock %}
+
+{% block content %}
+<section class="section confirmation-shell">
+    <div class="container confirmation-box">
+        <div class="success-mark not-found">404</div>
+        <p class="eyebrow">Page not found</p>
+        <h1>The page you requested is unavailable.</h1>
+        <p>It seems this page may have moved or no longer exists.</p>
+        <div class="confirmation-actions">
+            <a href="{{ url_for('home') }}" class="btn btn-primary">Back to Home</a>
+            <a href="{{ url_for('rooms') }}" class="btn btn-secondary">Browse Rooms</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

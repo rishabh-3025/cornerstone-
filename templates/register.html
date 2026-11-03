@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}GrandStay | Register{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="container auth-box">
+        <div class="auth-panel">
+            <p class="eyebrow">Begin your stay</p>
+            <h1>Create account</h1>
+            <form method="post" action="{{ url_for('register') }}">
+                <div class="two-col">
+                    <div class="input-group">
+                        <label>Full name</label>
+                        <input type="text" name="name" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Phone</label>
+                        <input type="tel" name="phone">
+                    </div>
+                </div>
+                <div class="two-col">
+                    <div class="input-group">
+                        <label>Email</label>
+                        <input type="email" name="email" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Password</label>
+                        <input type="password" name="password" required>
+                    </div>
+                </div>
+                <div class="two-col">
+                    <div class="input-group">
+                        <label>City</label>
+                        <input type="text" name="city">
+                    </div>
+                    <div class="input-group">
+                        <label>Country</label>
+                        <input type="text" name="country">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary full-width">Create Account</button>
+            </form>
+            <p class="auth-switch">Already a guest? <a href="{{ url_for('login') }}">Login</a></p>
+        </div>
+    </div>
+</section>
+{% endblock %}

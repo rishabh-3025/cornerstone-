@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}GrandStay | My Bookings{% endblock %}
+
+{% block content %}
+<section class="inner-banner">
+    <div class="container small-container">
+        <p class="eyebrow">Your stays</p>
+        <h1>My bookings</h1>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container bookings-list">
+        {% if bookings %}
+            {% for booking in bookings %}
+            <div class="booking-row">
+                <div>
+                    <p class="booking-label">{{ booking.room_type }} | Room {{ booking.room_number }}</p>
+                    <h3>{{ booking.title }}</h3>
+                </div>
+                <div>
+                    <p>{{ booking.check_in }} to {{ booking.check_out }}</p>
+                    <p>Status: <strong>{{ booking.status }}</strong></p>
+                    <p>Reference: {{ booking.booking_reference }}</p>
+                </div>
+                <div class="booking-actions">
+                    <a href="{{ url_for('booking_detail', booking_id=booking.id) }}" class="btn btn-secondary small">Details</a>
+                    <a href="{{ url_for('invoice', booking_id=booking.id) }}" class="btn btn-primary small">Invoice</a>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <h3>No bookings yet.</h3>
+                <p>Book a room and your itinerary will appear here.</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

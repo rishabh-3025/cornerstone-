@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}GrandStay | Admin Login{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="container auth-box">
+        <div class="auth-panel">
+            <p class="eyebrow">Staff access</p>
+            <h1>Admin login</h1>
+            <form method="post" action="{{ url_for('admin_login') }}">
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" name="email" placeholder="admin@grandstay.com" required>
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" name="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary full-width">Login as admin</button>
+            </form>
+            <p class="auth-switch"><a href="{{ url_for('login') }}">Back to customer login</a></p>
+            <p class="tip-text">Demo admin credentials: admin@grandstay.com / admin123</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

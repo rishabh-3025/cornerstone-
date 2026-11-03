@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block title %}GrandStay | Reviews{% endblock %}
+
+{% block content %}
+<section class="inner-banner">
+    <div class="container small-container">
+        <p class="eyebrow">Feedback</p>
+        <h1>Reviews & ratings</h1>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container review-layout">
+        <div class="booking-card-form">
+            <h2>Leave a review</h2>
+            <form method="post" action="{{ url_for('reviews') }}">
+                <div class="input-group">
+                    <label>Room</label>
+                    <select name="room_id" required>
+                        {% for room in room_options %}
+                        <option value="{{ room.id }}">{{ room.title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Rating</label>
+                    <select name="rating" required>
+                        <option value="5">5 - Excellent</option>
+                        <option value="4">4 - Very Good</option>
+                        <option value="3">3 - Good</option>
+                        <option value="2">2 - Fair</option>
+                        <option value="1">1 - Poor</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Comment</label>
+                    <textarea name="comment" rows="5" placeholder="Share your stay experience..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary full-width">Submit Review</button>
+            </form>
+        </div>
+
+        <div class="detail-panel">
+            <h3>Latest guest feedback</h3>
+            {% for item in reviews %}
+            <div class="review-item">
+                <div class="review-head">
+                    <strong>{{ item.name }}</strong>
+                    <span>{{ item.rating }}/5</span>
+                </div>
+                <p>{{ item.comment or 'Excellent stay and warm hospitality.' }}</p>
+                <small>{{ item.room_title }}</small>
+            </div>
+            {% else %}
+            <p>No reviews yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

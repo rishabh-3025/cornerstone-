@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% block title %}GrandStay | Luxury Hotel Booking{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="container hero-inner">
+        <div class="hero-copy">
+            <p class="eyebrow">Luxury living redefined</p>
+            <h1>Elegant stays for unforgettable city escapes.</h1>
+            <p>Discover refined rooms, modern comforts, and seamless booking at GrandStay — crafted for business travelers, weekend seekers, and elevated experiences.</p>
+            <div class="hero-actions">
+                <a href="{{ url_for('rooms') }}" class="btn btn-primary">Explore Rooms</a>
+                <a href="{{ url_for('search') }}" class="btn btn-secondary">Check Availability</a>
+            </div>
+            <div class="hero-metrics">
+                <div><strong>18+</strong><span>Luxury suites</span></div>
+                <div><strong>4.9/5</strong><span>Guest rating</span></div>
+                <div><strong>24/7</strong><span>Concierge support</span></div>
+            </div>
+        </div>
+        <div class="hero-card">
+            <div class="booking-card">
+                <p>Instant booking</p>
+                <h3>Reserve your perfect stay</h3>
+                <div class="mini-grid">
+                    <div><span>Check-in</span><strong>Today</strong></div>
+                    <div><span>Check-out</span><strong>2 nights</strong></div>
+                </div>
+                <a href="{{ url_for('search') }}" class="btn btn-primary full-width">Book Now</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section intro">
+    <div class="container intro-grid">
+        <div>
+            <p class="eyebrow">A refined city retreat</p>
+            <h2>Where comfort meets elevated hospitality.</h2>
+        </div>
+        <div>
+            <p>GrandStay blends contemporary design with warm service, creating a calm and polished environment for memorable stays. Whether you're traveling for work or leisure, every detail is created to feel effortless.</p>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="section-heading">
+            <p class="eyebrow">Featured rooms</p>
+            <h2>Stay in spaces designed for genuine rest.</h2>
+        </div>
+        <div class="room-grid">
+            {% for room in rooms %}
+            <article class="room-card">
+                <img src="{{ room.image_url }}" alt="{{ room.title }}">
+                <div class="room-body">
+                    <div class="room-head">
+                        <span class="pill">{{ room.room_type }}</span>
+                        <span>⭐ {{ room.rating }}</span>
+                    </div>
+                    <h3>{{ room.title }}</h3>
+                    <p>{{ room.description[:120] }}...</p>
+                    <div class="meta-row">
+                        <span>{{ room.max_guests }} Guests</span>
+                        <span>{{ room.bed_type }}</span>
+                    </div>
+                    <div class="price-row">
+                        <strong>₹{{ '{:,.0f}'.format(room.price_per_night) }}</strong>
+                        <span>/ night</span>
+                    </div>
+                    <a href="{{ url_for('room_detail', room_id=room.id) }}" class="btn btn-primary small">View Details</a>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="section alt-bg">
+    <div class="container">
+        <div class="section-heading">
+            <p class="eyebrow">GrandStay amenities</p>
+            <h2>Thoughtful details, seamlessly delivered.</h2>
+        </div>
+        <div class="feature-grid">
+            <div class="feature-item">
+                <span>🌿</span>
+                <h3>Wellness spaces</h3>
+                <p>Quiet corners, refined interiors, and calming ambiance designed for restorative stays.</p>
+            </div>
+            <div class="feature-item">
+                <span>🛎️</span>
+                <h3>Concierge care</h3>
+                <p>From check-in updates to local recommendations, our team is always ready to help.</p>
+            </div>
+            <div class="feature-item">
+                <span>🍽️</span>
+                <h3>Dining & lounge</h3>
+                <p>Enjoy elevated cuisine, signature coffee, and vibrant spaces for unwinding.</p>
+            </div>
+            <div class="feature-item">
+                <span>💼</span>
+                <h3>Business-ready</h3>
+                <p>Fast Wi‑Fi, work-friendly rooms, and private convenience for work trips.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="section-heading">
+            <p class="eyebrow">Why choose us</p>
+            <h2>A premium stay built around ease and comfort.</h2>
+        </div>
+        <div class="reasons-grid">
+            <div class="reason-card">
+                <h3>Prime locations</h3>
+                <p>Stay near key business and leisure anchors for a smoother itinerary.</p>
+            </div>
+            <div class="reason-card">
+                <h3>Flexible booking</h3>
+                <p>Clear pricing, instant confirmation, and responsive support throughout your stay.</p>
+            </div>
+            <div class="reason-card">
+                <h3>Smart comfort</h3>
+                <p>Elegant rooms with practical amenities that blend style and functionality.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section alt-bg">
+    <div class="container">
+        <div class="section-heading">
+            <p class="eyebrow">Guest reviews</p>
+            <h2>Travellers appreciate the GrandStay experience.</h2>
+        </div>
+        <div class="testimonial-grid">
+            {% for review in reviews %}
+            <article class="testimonial-card">
+                <div class="stars">★★★★★</div>
+                <p>“{{ review.comment or 'Amazing stay with a smooth booking process and excellent room comfort.' }}”</p>
+                <div class="reviewer">
+                    <strong>{{ review.name }}</strong>
+                    <span>{{ review.room_title }}</span>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="section cta-banner">
+    <div class="container cta-box">
+        <div>
+            <p class="eyebrow">Ready to check in?</p>
+            <h2>Reserve a stay that feels effortlessly luxurious.</h2>
+        </div>
+        <a href="{{ url_for('rooms') }}" class="btn btn-primary">Book Your Stay</a>
+    </div>
+</section>
+{% endblock %}

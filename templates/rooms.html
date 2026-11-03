@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% block title %}GrandStay | Rooms{% endblock %}
+
+{% block content %}
+<section class="inner-banner">
+    <div class="container small-container">
+        <p class="eyebrow">Discover our collection</p>
+        <h1>All Rooms</h1>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="filters-panel">
+            <form method="get" action="{{ url_for('rooms') }}" class="filter-form">
+                <div class="input-group">
+                    <label>Category</label>
+                    <select name="room_type">
+                        <option value="">Any</option>
+                        <option value="Standard" {% if filters.room_type == 'Standard' %}selected{% endif %}>Standard</option>
+                        <option value="Deluxe" {% if filters.room_type == 'Deluxe' %}selected{% endif %}>Deluxe</option>
+                        <option value="Suite" {% if filters.room_type == 'Suite' %}selected{% endif %}>Suite</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Min Price</label>
+                    <input type="number" name="min_price" value="{{ filters.min_price }}" placeholder="₹1500">
+                </div>
+                <div class="input-group">
+                    <label>Max Price</label>
+                    <input type="number" name="max_price" value="{{ filters.max_price }}" placeholder="₹8000">
+                </div>
+                <div class="input-group">
+                    <label>Guests</label>
+                    <input type="number" name="guest_capacity" value="{{ filters.guest_capacity }}" min="1" max="6">
+                </div>
+                <div class="input-group">
+                    <label>Sort By</label>
+                    <select name="sort_by">
+                        <option value="price_low_high" {% if filters.sort_by == 'price_low_high' %}selected{% endif %}>Price: Low to High</option>
+                        <option value="price_high_low" {% if filters.sort_by == 'price_high_low' %}selected{% endif %}>Price: High to Low</option>
+                        <option value="category" {% if filters.sort_by == 'category' %}selected{% endif %}>Category</option>
+                        <option value="popularity" {% if filters.sort_by == 'popularity' %}selected{% endif %}>Popularity</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Apply Filters</button>
+            </form>
+        </div>
+
+        <div class="room-grid">
+            {% for room in rooms %}
+            <article class="room-card">
+                <img src="{{ room.image_url }}" alt="{{ room.title }}">
+                <div class="room-body">
+                    <div class="room-head">
+                        <span class="pill">{{ room.room_type }}</span>
+                        <span>⭐ {{ room.rating }}</span>
+                    </div>
+                    <h3>{{ room.title }}</h3>
+                    <p>{{ room.description }}</p>
+                    <div class="meta-row">
+                        <span>{{ room.max_guests }} Guests</span>
+                        <span>{{ room.bed_type }}</span>
+                    </div>
+                    <div class="meta-row">
+                        <span>{{ room.room_size }}</span>
+                        <span>Floor {{ room.floor }}</span>
+                    </div>
+                    <div class="price-row">
+                        <strong>₹{{ '{:,.0f}'.format(room.price_per_night) }}</strong>
+                        <span>/ night</span>
+                    </div>
+                    <div class="room-actions">
+                        <a href="{{ url_for('room_detail', room_id=room.id) }}" class="btn btn-secondary small">Details</a>
+                        <a href="{{ url_for('book_room', room_id=room.id) }}" class="btn btn-primary small">Book Now</a>
+                    </div>
+                </div>
+            </article>
+            {% else %}
+            <div class="empty-state">
+                <h3>No rooms matched your filters.</h3>
+                <p>Please try a different date range or price combination.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

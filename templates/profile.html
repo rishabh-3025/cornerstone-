@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}GrandStay | Edit Profile{% endblock %}
+
+{% block content %}
+<section class="inner-banner">
+    <div class="container small-container">
+        <p class="eyebrow">Account settings</p>
+        <h1>Edit profile</h1>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container auth-box">
+        <div class="auth-panel large-panel">
+            <form method="post" action="{{ url_for('profile') }}">
+                <div class="two-col">
+                    <div class="input-group">
+                        <label>Name</label>
+                        <input type="text" name="name" value="{{ user.name }}" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Phone</label>
+                        <input type="tel" name="phone" value="{{ user.phone or '' }}">
+                    </div>
+                </div>
+                <div class="two-col">
+                    <div class="input-group">
+                        <label>City</label>
+                        <input type="text" name="city" value="{{ user.city or '' }}">
+                    </div>
+                    <div class="input-group">
+                        <label>Country</label>
+                        <input type="text" name="country" value="{{ user.country or '' }}">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary full-width">Save Changes</button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

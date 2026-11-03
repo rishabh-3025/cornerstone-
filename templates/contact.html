@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}GrandStay | Contact{% endblock %}
+
+{% block content %}
+<section class="inner-banner">
+    <div class="container small-container">
+        <p class="eyebrow">Get in touch</p>
+        <h1>Contact & hotel information</h1>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container contact-layout">
+        <div class="detail-panel">
+            <h3>Hotel details</h3>
+            <ul class="compact-list">
+                <li><strong>Address:</strong> 22 Palm Avenue, Mumbai, India</li>
+                <li><strong>Phone:</strong> +91 22 4567 8901</li>
+                <li><strong>Email:</strong> hello@grandstay.com</li>
+                <li><strong>Check-in:</strong> 2:00 PM</li>
+                <li><strong>Check-out:</strong> 12:00 PM</li>
+            </ul>
+        </div>
+
+        <div class="booking-card-form">
+            <h2>Send a message</h2>
+            <form method="post" action="{{ url_for('contact') }}">
+                <div class="two-col">
+                    <div class="input-group">
+                        <label>Name</label>
+                        <input type="text" name="name" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Email</label>
+                        <input type="email" name="email" required>
+                    </div>
+                </div>
+                <div class="two-col">
+                    <div class="input-group">
+                        <label>Phone</label>
+                        <input type="tel" name="phone">
+                    </div>
+                    <div class="input-group">
+                        <label>Subject</label>
+                        <input type="text" name="subject">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Message</label>
+                    <textarea name="message" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary full-width">Send Message</button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

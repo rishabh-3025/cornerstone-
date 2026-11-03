@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}GrandStay | Book Room{% endblock %}
+
+{% block content %}
+<section class="inner-banner">
+    <div class="container small-container">
+        <p class="eyebrow">Book your stay</p>
+        <h1>{{ room.title }}</h1>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container booking-layout">
+        <div class="booking-card-form">
+            <h2>Reservation Details</h2>
+            <form method="post" action="{{ url_for('book_room', room_id=room.id) }}">
+                <div class="input-group">
+                    <label for="guest-name">Guest name</label>
+                    <input id="guest-name" type="text" name="guest_name" value="{{ form_data.guest_name or '' }}" maxlength="100" autocomplete="name" required>
+                </div>
+                <div class="two-col">
+                    <div class="input-group">
+                        <label>Check-in</label>
+                        <input type="date" name="check_in" min="{{ (today or '') }}" value="{{ form_data.check_in or '' }}" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Check-out</label>
+                        <input type="date" name="check_out" min="{{ (today or '') }}" value="{{ form_data.check_out or '' }}" required>
+                    </div>
+                </div>
+                <div class="two-col">
+                    <div class="input-group">
+                        <label>Guests</label>
+                        <input type="number" name="guests" min="1" max="{{ room.max_guests }}" value="{{ form_data.guests or 2 }}" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Coupon Code</label>
+                        <input type="text" name="coupon_code" value="{{ form_data.coupon_code or '' }}" placeholder="WELCOME10">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary full-width">Check Availability</button>
+            </form>
+        </div>
+
+        <aside class="detail-panel">
+            <img src="{{ room.image_url }}" alt="{{ room.title }}">
+            <div class="content-box">
+                <div class="room-head">
+                    <span class="pill">{{ room.room_type }}</span>
+                    <span>⭐ {{ room.rating }}</span>
+                </div>
+                <h3>{{ room.title }}</h3>
+                <p>{{ room.description }}</p>
+                <ul class="compact-list">
+                    <li><strong>Capacity:</strong> {{ room.max_guests }} guests</li>
+                    <li><strong>Bed:</strong> {{ room.bed_type }}</li>
+                    <li><strong>Price:</strong> ₹{{ '{:,.0f}'.format(room.price_per_night) }}/night</li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+</section>
+{% endblock %}

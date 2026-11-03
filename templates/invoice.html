@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %}GrandStay | Invoice{% endblock %}
+
+{% block content %}
+<section class="inner-banner">
+    <div class="container small-container">
+        <p class="eyebrow">Invoice</p>
+        <h1>Booking invoice</h1>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container invoice-container">
+        <div class="invoice-box">
+            <div class="invoice-header">
+                <div>
+                    <h2>GrandStay</h2>
+                    <p>22 Palm Avenue, Mumbai</p>
+                </div>
+                <div>
+                    <strong>{{ booking.booking_reference }}</strong>
+                    <p>{{ booking.check_in }} - {{ booking.check_out }}</p>
+                </div>
+            </div>
+
+            <div class="invoice-meta">
+                <div>
+                    <h4>Bill To</h4>
+                    <p>{{ booking.customer_name }}</p>
+                    <p>{{ booking.customer_email }}</p>
+                </div>
+                <div>
+                    <h4>Stay</h4>
+                    <p>{{ booking.room_type }} • Room {{ booking.room_number }}</p>
+                    <p>{{ booking.title }}</p>
+                </div>
+            </div>
+
+            <div class="summary-box invoice-summary">
+                <div class="summary-row"><span>Room subtotal</span><strong>₹{{ '{:,.0f}'.format(booking.subtotal) }}</strong></div>
+                <div class="summary-row"><span>Discount</span><strong>-₹{{ '{:,.0f}'.format(booking.discount) }}</strong></div>
+                <div class="summary-row"><span>Taxes</span><strong>₹{{ '{:,.0f}'.format(booking.taxes) }}</strong></div>
+                <div class="summary-row total"><span>Total payable</span><strong>₹{{ '{:,.0f}'.format(booking.total_amount) }}</strong></div>
+                <div class="summary-row"><span>Amount paid</span><strong>₹{{ '{:,.0f}'.format(payment.amount_paid if payment else 0) }}</strong></div>
+                <div class="summary-row"><span>Outstanding</span><strong>₹{{ '{:,.0f}'.format(payment.amount_due if payment else 0) }}</strong></div>
+            </div>
+
+            <div class="invoice-actions">
+                <a href="{{ url_for('download_invoice', booking_id=booking.id) }}" class="btn btn-primary">Download PDF</a>
+                <a href="{{ url_for('my_bookings') }}" class="btn btn-secondary">Back to bookings</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

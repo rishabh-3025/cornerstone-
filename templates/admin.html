@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+{% block title %}GrandStay | Admin{% endblock %}
+
+{% block content %}
+<section class="inner-banner">
+    <div class="container small-container">
+        <p class="eyebrow">Administration</p>
+        <h1>GrandStay admin panel</h1>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container dashboard-grid">
+        <div class="stat-card">
+            <span>Total Rooms</span>
+            <strong>{{ room_count }}</strong>
+        </div>
+        <div class="stat-card">
+            <span>Total Bookings</span>
+            <strong>{{ booking_count }}</strong>
+        </div>
+        <div class="stat-card">
+            <span>Total Revenue</span>
+            <strong>₹{{ '{:,.0f}'.format(revenue) }}</strong>
+        </div>
+    </div>
+
+    <div class="container section-stack">
+        <div class="detail-panel large-panel">
+            <h2>UPI payment verification</h2>
+            <p>Compare the screenshot with the booking amount. Only approve after confirming the successful transfer in the payment app or bank account.</p>
+            {% if pending_payments %}
+                {% for payment in pending_payments %}
+                <article class="payment-review-card">
+                    <div class="payment-review-details">
+                        <h3>{{ payment.guest_name }}</h3>
+                        <p>{{ payment.customer_email }} · Booking {{ payment.booking_reference }}</p>
+                        <p>{{ payment.room_type }} room {{ payment.room_number }} — {{ payment.room_title }}</p>
+                        <p>{{ payment.check_in }} to {{ payment.check_out }} ({{ payment.nights }} nights)</p>
+                        <ul class="compact-list">
+                            <li><strong>Room rate:</strong> ₹{{ '{:,.2f}'.format(payment.room_rate) }} × {{ payment.nights }} nights</li>
+                            <li><strong>Subtotal:</strong> ₹{{ '{:,.2f}'.format(payment.subtotal) }}</li>
+                            <li><strong>Discount:</strong> -₹{{ '{:,.2f}'.format(payment.discount) }}</li>
+                            <li><strong>Taxes:</strong> ₹{{ '{:,.2f}'.format(payment.taxes) }}</li>
+                            <li><strong>Exact amount to verify:</strong> ₹{{ '{:,.2f}'.format(payment.total_amount) }}</li>
+                        </ul>
+                    </div>
+                    <a class="payment-review-image" href="{{ url_for('view_payment_proof', payment_id=payment.payment_id) }}" target="_blank" rel="noopener">
+                        <img src="{{ url_for('view_payment_proof', payment_id=payment.payment_id) }}" alt="Payment proof submitted by {{ payment.guest_name }}">
+                        <span>Open full screenshot</span>
+                    </a>
+                    <form method="post" action="{{ url_for('review_upi_payment', payment_id=payment.payment_id) }}" class="payment-review-form">
+                        <label for="received-amount-{{ payment.payment_id }}">Amount visible in the screenshot</label>
+                        <div class="payment-review-actions">
+                            <input id="received-amount-{{ payment.payment_id }}" type="number" name="received_amount" min="0.01" step="0.01" required>
+                            <button type="submit" name="decision" value="approve" class="btn btn-primary">Verify & confirm</button>
+                        </div>
+                    </form>
+                    <form method="post" action="{{ url_for('review_upi_payment', payment_id=payment.payment_id) }}" onsubmit="return confirm('Reject this payment proof and cancel the unpaid booking?');">
+                        <button type="submit" name="decision" value="reject" class="btn btn-secondary">Reject proof</button>
+                    </form>
+                </article>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <p>No UPI payment screenshots are waiting for review.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="detail-panel large-panel">
+            <h2>Room pricing</h2>
+            {% for room in rooms %}
+            <form method="post" action="{{ url_for('update_room_price', room_id=room.id) }}" class="admin-inline-form">
+                <div class="admin-inline-fields">
+                    <span>{{ room.room_type }} - Room {{ room.room_number }}</span>
+                    <input type="number" name="price_per_night" value="{{ room.price_per_night }}" min="1" step="1">
+                    <button type="submit" class="btn btn-primary small">Update</button>
+                </div>
+            </form>
+            {% endfor %}
+        </div>
+
+        <div class="detail-panel large-panel">
+            <h2>Create coupon</h2>
+            <form method="post" action="{{ url_for('add_coupon') }}" class="coupon-form">
+                <div class="two-col">
+                    <div class="input-group">
+                        <label>Code</label>
+                        <input type="text" name="code" placeholder="WELCOME10" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Discount Type</label>
+                        <select name="discount_type">
+                            <option value="percentage">Percentage</option>
+                            <option value="fixed">Fixed Amount</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="two-col">
+                    <div class="input-group">
+                        <label>Discount Value</label>
+                        <input type="number" name="discount_value" min="1" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Max Discount</label>
+                        <input type="number" name="maximum_discount" min="0" value="0">
+                    </div>
+                </div>
+                <div class="two-col">
+                    <div class="input-group">
+                        <label>Min Booking</label>
+                        <input type="number" name="minimum_booking_amount" min="0" value="0">
+                    </div>
+                    <div class="input-group">
+                        <label>Per Customer Limit</label>
+                        <input type="number" name="per_customer_limit" min="1" value="1">
+                    </div>
+                </div>
+                <div class="two-col">
+                    <div class="input-group">
+                        <label>Start Date</label>
+                        <input type="date" name="start_date">
+                    </div>
+                    <div class="input-group">
+                        <label>Expiry Date</label>
+                        <input type="date" name="expiry_date">
+                    </div>
+                </div>
+                <div class="two-col">
+                    <div class="input-group">
+                        <label>Usage Limit</label>
+                        <input type="number" name="usage_limit" min="1" value="10">
+                    </div>
+                    <div class="input-group">
+                        <label></label>
+                        <button type="submit" class="btn btn-primary full-width">Create Coupon</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="detail-panel large-panel">
+            <h2>Coupons</h2>
+            {% for coupon in coupons %}
+            <div class="coupon-row">
+                <div>
+                    <strong>{{ coupon.code }}</strong>
+                    <p>{{ coupon.discount_type }} • {{ coupon.discount_value }}{% if coupon.discount_type == 'percentage' %}%{% else %}₹{% endif %}</p>
+                </div>
+                <div>
+                    <span class="status-pill {% if coupon.is_active %}active{% else %}inactive{% endif %}">{{ 'Active' if coupon.is_active else 'Inactive' }}</span>
+                </div>
+                <form method="post" action="{{ url_for('toggle_coupon', coupon_id=coupon.id) }}">
+                    <button type="submit" class="btn btn-secondary small">Toggle</button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

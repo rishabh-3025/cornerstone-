@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}GrandStay | Booking Detail{% endblock %}
+
+{% block content %}
+<section class="inner-banner">
+    <div class="container small-container">
+        <p class="eyebrow">Reservation</p>
+        <h1>Booking details</h1>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container detail-wrapper">
+        <div class="detail-panel large-panel">
+            <h2>{{ booking.title }}</h2>
+            <ul class="compact-list">
+                <li><strong>Reference:</strong> {{ booking.booking_reference }}</li>
+                <li><strong>Guest name:</strong> {{ booking.guest_name }}</li>
+                <li><strong>Room:</strong> {{ booking.room_type }} - {{ booking.room_number }}</li>
+                <li><strong>Check-in:</strong> {{ booking.check_in }}</li>
+                <li><strong>Check-out:</strong> {{ booking.check_out }}</li>
+                <li><strong>Guests:</strong> {{ booking.guests }}</li>
+                <li><strong>Status:</strong> {{ booking.status }}</li>
+                <li><strong>Payment status:</strong> {{ booking.payment_status }}</li>
+                <li><strong>Total:</strong> ₹{{ '{:,.0f}'.format(booking.total_amount) }}</li>
+            </ul>
+            {% if booking.status not in ['Cancelled', 'Checked-out'] %}
+            <form method="post" action="{{ url_for('cancel_booking', booking_id=booking.id) }}" onsubmit="return confirm('Cancel this booking?');">
+                <button type="submit" class="btn btn-secondary full-width">Cancel Booking</button>
+            </form>
+            {% endif %}
+        </div>
+        <div class="detail-panel">
+            <h3>Payment summary</h3>
+            <ul class="compact-list">
+                <li><strong>Method:</strong> {{ payment.payment_method if payment else 'N/A' }}</li>
+                <li><strong>Amount paid:</strong> ₹{{ '{:,.0f}'.format(payment.amount_paid if payment else 0) }}</li>
+                <li><strong>Amount due:</strong> ₹{{ '{:,.0f}'.format(payment.amount_due if payment else 0) }}</li>
+                <li><strong>Transaction:</strong> {{ payment.transaction_reference if payment else 'N/A' }}</li>
+            </ul>
+            <a href="{{ url_for('invoice', booking_id=booking.id) }}" class="btn btn-primary full-width">View Invoice</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

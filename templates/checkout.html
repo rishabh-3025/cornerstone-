@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block title %}GrandStay | Checkout{% endblock %}
+
+{% block content %}
+<section class="inner-banner">
+    <div class="container small-container">
+        <p class="eyebrow">Your booking</p>
+        <h1>Checkout & payment</h1>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container payment-layout">
+        <div class="booking-card-form">
+            <h2>Payment Details</h2>
+            <form method="post" action="{{ url_for('checkout') }}" enctype="multipart/form-data">
+                <input type="hidden" name="room_id" value="{{ room.id }}">
+                <input type="hidden" name="check_in" value="{{ summary.check_in }}">
+                <input type="hidden" name="check_out" value="{{ summary.check_out }}">
+                <input type="hidden" name="guests" value="{{ summary.guests }}">
+                <input type="hidden" name="coupon_code" value="{{ request.args.get('coupon_code', '') }}">
+                <input type="hidden" name="guest_name" value="{{ request.args.get('guest_name', current_user.name) }}">
+
+                <div class="input-group">
+                    <label>Select Payment Method</label>
+                    <select name="payment_method">
+                        {% for method in payment_methods %}
+                        <option value="{{ method }}">{{ method }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div id="upi-qr-panel" class="upi-qr-panel hidden" aria-live="polite">
+                    <div class="upi-qr-image">
+                        <img src="{{ url_for('static', filename='img/upi-payment.png') }}" alt="PhonePe payment QR code for Divyanshu Dapkara">
+                    </div>
+                    <div class="upi-qr-meta">
+                        <strong>Pay using PhonePe or another UPI app</strong>
+                        <p>Recipient: Divyanshu Dapkara</p>
+                        <p>Amount to pay: ₹{{ '{:,.2f}'.format(summary.total) }}</p>
+                        <small>Pay the exact amount shown. Your screenshot will be reviewed by an admin before the booking is confirmed.</small>
+                        <div class="input-group payment-proof-input">
+                            <label for="payment-proof">Upload payment screenshot</label>
+                            <input id="payment-proof" type="file" name="payment_proof" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp">
+                            <small>JPG, PNG, or WEBP; up to 5 MB.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="summary-box">
+                    <h3>Charge breakdown</h3>
+                    <div class="summary-row"><span>Room rate per night</span><strong>₹{{ '{:,.0f}'.format(summary.room_rate) }}</strong></div>
+                    <div class="summary-row"><span>Number of nights</span><strong>{{ summary.nights }}</strong></div>
+                    <div class="summary-row"><span>Subtotal</span><strong>₹{{ '{:,.0f}'.format(summary.subtotal) }}</strong></div>
+                    <div class="summary-row"><span>Discount</span><strong>-₹{{ '{:,.0f}'.format(summary.discount) }}</strong></div>
+                    <div class="summary-row"><span>Taxes</span><strong>₹{{ '{:,.0f}'.format(summary.taxes) }}</strong></div>
+                    <div class="summary-row total"><span>Final payable</span><strong>₹{{ '{:,.0f}'.format(summary.total) }}</strong></div>
+                </div>
+
+                <button type="submit" class="btn btn-primary full-width">Confirm Booking</button>
+            </form>
+        </div>
+
+        <aside class="detail-panel">
+            <img src="{{ room.image_url }}" alt="{{ room.title }}">
+            <div class="content-box">
+                <div class="room-head">
+                    <span class="pill">{{ room.room_type }}</span>
+                    <span>⭐ {{ room.rating }}</span>
+                </div>
+                <h3>{{ room.title }}</h3>
+                <ul class="compact-list">
+                    <li><strong>Guest name:</strong> {{ request.args.get('guest_name', current_user.name) }}</li>
+                    <li><strong>Check-in:</strong> {{ summary.check_in }}</li>
+                    <li><strong>Check-out:</strong> {{ summary.check_out }}</li>
+                    <li><strong>Guests:</strong> {{ summary.guests }}</li>
+                    <li><strong>Coupon:</strong> {{ request.args.get('coupon_code', '') or 'Not applied' }}</li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+</section>
+{% endblock %}

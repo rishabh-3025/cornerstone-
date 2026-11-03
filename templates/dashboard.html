@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}GrandStay | Dashboard{% endblock %}
+
+{% block content %}
+<section class="inner-banner">
+    <div class="container small-container">
+        <p class="eyebrow">Your account</p>
+        <h1>{{ user.name }}'s dashboard</h1>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container dashboard-grid">
+        <div class="stat-card">
+            <span>Total Bookings</span>
+            <strong>{{ total_bookings }}</strong>
+        </div>
+        <div class="stat-card">
+            <span>Upcoming Stays</span>
+            <strong>{{ upcoming }}</strong>
+        </div>
+        <div class="stat-card">
+            <span>Member Since</span>
+            <strong>{{ user.created_at[:10] }}</strong>
+        </div>
+    </div>
+
+    <div class="container dashboard-links">
+        <a href="{{ url_for('profile') }}" class="btn btn-secondary">Edit Profile</a>
+        <a href="{{ url_for('change_password') }}" class="btn btn-secondary">Change Password</a>
+        <a href="{{ url_for('my_bookings') }}" class="btn btn-secondary">My Bookings</a>
+        <a href="{{ url_for('reviews') }}" class="btn btn-secondary">Reviews</a>
+    </div>
+
+    <div class="container bookings-list">
+        <h2>Recent bookings</h2>
+        {% if bookings %}
+            {% for booking in bookings %}
+            <div class="booking-row">
+                <div>
+                    <p class="booking-label">{{ booking.room_type }} | Room {{ booking.room_number }}</p>
+                    <h3>{{ booking.title }}</h3>
+                </div>
+                <div>
+                    <p>{{ booking.check_in }} → {{ booking.check_out }}</p>
+                    <p>Status: <strong>{{ booking.status }}</strong></p>
+                </div>
+                <a href="{{ url_for('booking_detail', booking_id=booking.id) }}" class="btn btn-primary small">View</a>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <h3>You do not have any bookings yet.</h3>
+                <p>Explore our rooms and plan your next stay.</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

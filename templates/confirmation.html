@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}GrandStay | Booking Confirmed{% endblock %}
+
+{% block content %}
+<section class="section confirmation-shell">
+    <div class="container confirmation-box">
+        {% if payment and payment.payment_status == 'Pending Verification' %}
+        <div class="success-mark">…</div>
+        <p class="eyebrow">Payment verification pending</p>
+        <h1>Thank you, {{ booking.guest_name }}.</h1>
+        <p>Your booking and payment screenshot have been received. We will confirm the reservation after an admin verifies the payment amount.</p>
+        {% else %}
+        <div class="success-mark">✓</div>
+        <p class="eyebrow">Booking confirmed</p>
+        <h1>Thank you, {{ booking.guest_name }}.</h1>
+        <p>Your reservation has been recorded successfully.</p>
+        {% endif %}
+
+        <div class="summary-box">
+            <h3>Booking Summary</h3>
+            <div class="summary-row"><span>Reference</span><strong>{{ booking.booking_reference }}</strong></div>
+            <div class="summary-row"><span>Room</span><strong>{{ booking.room_type }} - {{ booking.room_number }}</strong></div>
+            <div class="summary-row"><span>Stay</span><strong>{{ booking.check_in }} to {{ booking.check_out }}</strong></div>
+            <div class="summary-row"><span>Total</span><strong>₹{{ '{:,.0f}'.format(booking.total_amount) }}</strong></div>
+            <div class="summary-row"><span>Payment</span><strong>{{ payment.payment_status if payment else 'Pending' }}</strong></div>
+        </div>
+
+        <div class="confirmation-actions">
+            <a href="{{ url_for('my_bookings') }}" class="btn btn-primary">View My Bookings</a>
+            <a href="{{ url_for('invoice', booking_id=booking.id) }}" class="btn btn-secondary">View Invoice</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

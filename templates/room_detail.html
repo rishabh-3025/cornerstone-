@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block title %}GrandStay | {{ room.title }}{% endblock %}
+
+{% block content %}
+<section class="room-detail-hero">
+    <div class="container room-hero-grid">
+        <div class="room-hero-image">
+            <img src="{{ room.image_url }}" alt="{{ room.title }}">
+        </div>
+        <div class="room-hero-content">
+            <p class="eyebrow">{{ room.room_type }} room</p>
+            <h1>{{ room.title }}</h1>
+            <div class="rating-line">
+                <span>⭐ {{ room.rating }}</span>
+                <span>{{ room.room_size }}</span>
+                <span>{{ room.max_guests }} guests</span>
+            </div>
+            <p>{{ room.description }}</p>
+            <div class="detail-price">
+                <strong>₹{{ '{:,.0f}'.format(room.price_per_night) }}</strong>
+                <span>per night</span>
+            </div>
+            <div class="detail-actions">
+                <a href="{{ url_for('book_room', room_id=room.id) }}" class="btn btn-primary">Book This Room</a>
+                <a href="{{ url_for('rooms') }}" class="btn btn-secondary">Browse More</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container room-spec-grid">
+        <div class="info-card">
+            <h3>Room Highlights</h3>
+            <ul class="check-list">
+                {% for item in room.amenities.split(',') %}
+                <li>{{ item.strip() }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="info-card">
+            <h3>Stay Information</h3>
+            <ul class="compact-list">
+                <li><strong>Room Number:</strong> {{ room.room_number }}</li>
+                <li><strong>Bed Type:</strong> {{ room.bed_type }}</li>
+                <li><strong>Max Guests:</strong> {{ room.max_guests }}</li>
+                <li><strong>Floor:</strong> {{ room.floor }}</li>
+                <li><strong>Maintenance:</strong> {{ room.maintenance_status }}</li>
+                <li><strong>Housekeeping:</strong> {{ room.housekeeping_status }}</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section class="section alt-bg">
+    <div class="container">
+        <div class="section-heading">
+            <p class="eyebrow">Guest feedback</p>
+            <h2>Recent reviews</h2>
+        </div>
+        <div class="testimonial-grid">
+            {% for review in reviews %}
+            <article class="testimonial-card">
+                <div class="stars">★★★★★</div>
+                <p>{{ review.comment or 'Wonderful stay with premium comfort and excellent service.' }}</p>
+                <div class="reviewer">
+                    <strong>{{ review.name }}</strong>
+                    <span>{{ review.rating }}/5</span>
+                </div>
+            </article>
+            {% else %}
+            <div class="empty-state">
+                <h3>No reviews yet.</h3>
+                <p>Be the first guest to share feedback for this room.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}
